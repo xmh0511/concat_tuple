@@ -6,15 +6,19 @@ pub trait Tuple {
     fn as_product(self) -> Self::ProductList;
 }
 
+
 pub trait ProductList {
     type Tuple: Tuple;
     fn as_tuple(self) -> Self::Tuple;
 }
 
+
 pub trait MergeProductList<U: ProductList> {
     type Output;
     fn concat(self, v: U) -> Self::Output;
 }
+
+
 
 pub trait Combine<U> {
     type Output;
@@ -62,6 +66,28 @@ macro_rules! create_product_pattern {
 }
 
 macro_rules! gen_impl {
+	()=>{
+		impl ProductList for (){
+			type Tuple = ();
+			fn as_tuple(self) -> Self::Tuple {
+				()
+			}
+		}
+		impl Tuple for (){
+			type ProductList = ();
+		
+			fn as_product(self) -> Self::ProductList {
+				()
+			}
+		}
+		impl<U:ProductList> MergeProductList<U> for (){
+			type Output = U;
+			fn concat(self, v: U) -> Self::Output{
+				v
+			}
+		}
+
+	};
 	($($ids:ident)+) => {
 		impl<$($ids),+> Tuple for ($($ids),+,){
 			type ProductList = gen_product_list!($($ids),+);
@@ -105,7 +131,7 @@ where
 {
     t1.as_product().concat(t2.as_product()).as_tuple()
 }
-
+gen_impl! {}
 gen_impl! {T0}
 gen_impl! {T0 T1}
 gen_impl! {T0 T1 T2}
