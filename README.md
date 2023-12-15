@@ -5,7 +5,7 @@ fn main() {
     type TT = <(u32, char) as Tuple>::ProductList;
     let t: Product<u32, Product<char, ()>> = TT::default();
     type T3 = <TT as Combine<Product<String, ()>>>::Output;
-	let t: (u32, char, String) = <<T3 as ProductList>::Tuple>::default();
+    let t: (u32, char, String) = <<T3 as ProductList>::Tuple>::default();
     let t: Product<u32, Product<char, Product<String, ()>>> = T3::default();
     let t: (u32, char, String) = t.as_tuple();
     let t: Product<u32, Product<char, Product<String, ()>>> = t.as_product();
